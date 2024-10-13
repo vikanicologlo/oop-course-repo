@@ -19,18 +19,33 @@ public class Main {
     Universe marvel = new Universe("marvel", new ArrayList<>());
     Universe rings = new Universe("rings", new ArrayList<>());
 
+    //iteration over data entries
     for (JsonNode entry : data) {
-      if (entry.has("id") && entry.get("id").asInt() % 2 == 0) {
-        int evenId = entry.get("id").asInt();
-        System.out.println("Even ID: " + evenId);
+      Criteria criteria = new Criteria(entry);
+      // classification
+      if (criteria.planet.equals("Kashyyyk") || (!criteria.isHumanoid && criteria.age <= 400 && criteria.hasTraits("HAIRY", "TALL"))) {
+        starWars.individuals().add(entry);
+      } else if (criteria.planet.equals("Endor")) {
+        starWars.individuals().add(entry);
+      } else if (criteria.planet.equals("Asgard") || (!criteria.planet.equals("Earth") && criteria.isHumanoid && criteria.age <= 5000 && criteria.hasTraits("BLONDE", "TALL"))) {
+        marvel.individuals().add(entry);
+      } else if (criteria.planet.equals("Betelgeuse") || (criteria.age <= 100 && (criteria.hasTraits("EXTRA_ARMS") || criteria.hasTraits("EXTRA_HEAD")))) {
+        hitchhikers.individuals().add(entry);
+      } else if (criteria.planet.equals("Vogsphere") || (!criteria.planet.equals("Earth") && (!criteria.isHumanoid && (criteria.hasTraits("BULKY") || (criteria.hasTraits("GREEN") ) || (criteria.age <= 200 && criteria.hasTraits("GREEN")))))) {
+        hitchhikers.individuals().add(entry);
+      } else if (criteria.planet.equals("Earth") || (criteria.isHumanoid && criteria.age <= 8000)) {
+        rings.individuals().add(entry);
+      } else if (criteria.planet.equals("Earth") || (criteria.isHumanoid && criteria.hasTraits("BULKY"))) {
+        rings.individuals().add(entry);
+      } else {
+        System.out.println("There are characters who don't match the right criteria");
       }
     }
 
-
-    mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/starwars.json"), starWars);
-    mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/hitchhiker.json"), hitchhikers);
-    mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/rings.json"), rings);
-    mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/marvel.json"), marvel);
+    mapper.writeValue(new File("src/main/resources/output/starwars.json"), starWars);
+    mapper.writeValue(new File("src/main/resources/output/hitchhiker.json"), hitchhikers);
+    mapper.writeValue(new File("src/main/resources/output/rings.json"), rings);
+    mapper.writeValue(new File("src/main/resources/output/marvel.json"), marvel);
   }
 }
 
@@ -40,15 +55,19 @@ class Criteria {
   public int age;
   public List<String> traits;
 
-  //use entry.has to check if such field exists and if doesnt, set up default value
-  //for traits use arraylist
   public Criteria(JsonNode entry) {
     this.planet = entry.has("planet") ? entry.get("planet").asText() : "";
     this.isHumanoid = entry.has("isHumanoid") ? entry.get("isHumanoid").asBoolean() : false;
     this.age = entry.has("age") ? entry.get("age").asInt() : 0;
+
+    // Check if entry has traits and then convert each trait to string
     this.traits = new ArrayList<>();
+    if (entry.has("traits")) {
+      entry.get("traits").forEach(trait -> this.traits.add(trait.asText()));
+    }
   }
-  //check if trait contains or not
+
+  // Check if entry contains specified traits, return false if not and true if contains
   public boolean hasTraits(String... traitsToCheck) {
     for (String trait : traitsToCheck) {
       if (!this.traits.contains(trait)) {
@@ -60,3 +79,4 @@ class Criteria {
 }
 
 record Universe(String name, List<JsonNode> individuals) { }
+

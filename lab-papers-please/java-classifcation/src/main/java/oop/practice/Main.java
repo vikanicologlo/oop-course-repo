@@ -42,10 +42,13 @@ public class Main {
       }
     }
 
-    mapper.writeValue(new File("src/main/resources/output/starwars.json"), starWars);
-    mapper.writeValue(new File("src/main/resources/output/hitchhiker.json"), hitchhikers);
-    mapper.writeValue(new File("src/main/resources/output/rings.json"), rings);
-    mapper.writeValue(new File("src/main/resources/output/marvel.json"), marvel);
+    View view = new View(mapper);
+
+    //storing data in json files
+    view.writeToFile(starWars, "/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/starwars.json");
+    view.writeToFile(hitchhikers, "/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/hitchhiker.json");
+    view.writeToFile(rings, "/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/rings.json");
+    view.writeToFile(marvel, "/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/marvel.json");
   }
 }
 
@@ -80,3 +83,15 @@ class Criteria {
 
 record Universe(String name, List<JsonNode> individuals) { }
 
+class View {
+  private final ObjectMapper mapper;
+
+  public View(ObjectMapper mapper) {
+    this.mapper = mapper;
+  }
+
+  //pretty format of the strings to json file
+  public void writeToFile(Universe universe, String filePath) throws IOException {
+    mapper.writerWithDefaultPrettyPrinter().writeValue(new File(filePath), universe);
+  }
+}

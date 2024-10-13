@@ -49,8 +49,14 @@ public class Main {
     mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/hitchhiker.json"), hitchhikers);
     mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/rings.json"), rings);
     mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/marvel.json"), marvel);
-
-    Example.main();
+    //Task of the day 1
+    Example Example = new Example();
+    //Task of the day 2
+    ReadFile reader = new ReadFile();
+    //Read whole file
+    reader.readFileWholeAndPrint();
+    //Read objects separately
+    reader.readFileSeparatelyAndPrint();
 
     scanner.close();
   }
@@ -60,12 +66,39 @@ record Universe(
         String name,
         List<JsonNode> individuals
 ) { }
-
 class Example {
-  public static void main() {
+
+  public Example() {
     System.out.println("Which one of universes do you like the most?");
-    Scanner  console = new Scanner(System.in);
+    Scanner console = new Scanner(System.in);
     String answer = console.nextLine();
     System.out.println("I also like " + answer + "!");
   }
+}
+
+class ReadFile {
+  private JsonNode jsonNode;
+
+  public void readFileWholeAndPrint() throws IOException {
+
+    ObjectMapper mapper = new ObjectMapper();
+    File file1 = new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/java-classifcation/src/main/resources/input.json");
+    this.jsonNode = mapper.readTree(file1);
+    System.out.println(" ");
+    System.out.println("Printing whole Json file:");
+    System.out.println(jsonNode.toPrettyString());
+
+  }
+
+
+  public void readFileSeparatelyAndPrint()  {
+    JsonNode jsonNode1 = jsonNode.get("data");
+    System.out.println(" ");
+    System.out.println("Printing each Json object separately:");
+    //use for loop to print each node separately
+    for (JsonNode node : jsonNode1) {
+      System.out.println(node.toPrettyString());
+    }
+  }
+
 }

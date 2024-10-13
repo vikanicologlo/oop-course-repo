@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
   public static void main(String[] args) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
-    File inputFile = new File("src/main/resources/test-input.json");
+    File inputFile = new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/java-classifcation/target/classes/test-input.json");
     JsonNode data = mapper.readTree(inputFile).get("data");
 
     Universe starWars = new Universe("starWars", new ArrayList<>());
@@ -44,15 +44,28 @@ public class Main {
       }
     }
 
+
+    mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/starwars.json"), starWars);
+    mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/hitchhiker.json"), hitchhikers);
+    mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/rings.json"), rings);
+    mapper.writeValue(new File("/Users/viktorianicologlo/Downloads/oop-course-repo/lab-papers-please/output/marvel.json"), marvel);
+
+    Example.main();
+
     scanner.close();
-    mapper.writeValue(new File("src/main/resources/output/starwars.json"), starWars);
-    mapper.writeValue(new File("src/main/resources/output/hitchhiker.json"), hitchhikers);
-    mapper.writeValue(new File("src/main/resources/output/rings.json"), rings);
-    mapper.writeValue(new File("src/main/resources/output/marvel.json"), marvel);
   }
 }
 
 record Universe(
-    String name,
-    List<JsonNode> individuals
+        String name,
+        List<JsonNode> individuals
 ) { }
+
+class Example {
+  public static void main() {
+    System.out.println("Which one of universes do you like the most?");
+    Scanner  console = new Scanner(System.in);
+    String answer = console.nextLine();
+    System.out.println("I also like " + answer + "!");
+  }
+}

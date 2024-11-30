@@ -1,28 +1,34 @@
 package oop.practice;
-
 public class Main {
     public static void main(String[] args) {
-        Queue<Integer> arrayQueue = new ArrayQueue<>();
-        arrayQueue.enqueue(1);
-        arrayQueue.enqueue(2);
-        arrayQueue.enqueue(3);
-        System.out.println("ArrayQueue: " + arrayQueue.dequeue());
-        System.out.println("ArrayQueue: " + arrayQueue.peek());
 
-        Queue<Integer> priorityQueue = new PriorityQueuee<>((a, b) -> b - a);
-        priorityQueue.enqueue(10);
-        priorityQueue.enqueue(5);
-        priorityQueue.enqueue(15);
-        System.out.println("PriorityQueue: " + priorityQueue.dequeue());
-        System.out.println("PriorityQueue: " + priorityQueue.peek());
+        Queue<String> carQueue = new SimpleQueue<>();
+        carQueue.enqueue("Car1");
+        carQueue.enqueue("Car2");
+        carQueue.enqueue("Car3");
 
+        Dineable peopleDinner = new PeopleDinner();
+        Refuelable gasStation = new GasStation();
 
-        Queue<String> circularQueue = new CircularQueue<>(3);
-        circularQueue.enqueue("A");
-        circularQueue.enqueue("B");
-        circularQueue.enqueue("C");
-        System.out.println("CircularQueue: " + circularQueue.dequeue());
-        circularQueue.enqueue("D");
-        System.out.println("CircularQueue: " + circularQueue.peek());
+        CarStation peopleGasStation = new CarStation(carQueue, peopleDinner, gasStation);
+        System.out.println("Processing cars for people and gas station:");
+        peopleGasStation.processQueue();
+
+        Queue<String> robotQueue = new SimpleQueue<>();
+        robotQueue.enqueue("Car4");
+        robotQueue.enqueue("Car5");
+
+        Dineable robotDinner = new RobotDinner();
+        Refuelable electricStation = new ElectricStation();
+
+        CarStation robotElectricStation = new CarStation(robotQueue, robotDinner, electricStation);
+        System.out.println("\nProcessing cars for robots and electric station:");
+        robotElectricStation.processQueue();
+
+        System.out.println("\nStatistics:");
+        System.out.println("People served: " + ((PeopleDinner) peopleDinner).getPeopleServed());
+        System.out.println("Robots served: " + ((RobotDinner) robotDinner).getRobotsServed());
+        System.out.println("Gas cars refueled: " + ((GasStation) gasStation).getGasCarsRefueled());
+        System.out.println("Electric cars refueled: " + ((ElectricStation) electricStation).getElectricCarsRefueled());
     }
 }

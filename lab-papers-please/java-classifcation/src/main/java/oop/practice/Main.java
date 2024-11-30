@@ -1,58 +1,28 @@
 package oop.practice;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 public class Main {
-  public static void main(String[] args) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    File inputFile = new File("src/main/resources/test-input.json");
-    JsonNode data = mapper.readTree(inputFile).get("data");
+    public static void main(String[] args) {
+        Queue<Integer> arrayQueue = new ArrayQueue<>();
+        arrayQueue.enqueue(1);
+        arrayQueue.enqueue(2);
+        arrayQueue.enqueue(3);
+        System.out.println("ArrayQueue: " + arrayQueue.dequeue());
+        System.out.println("ArrayQueue: " + arrayQueue.peek());
 
-    Universe starWars = new Universe("starWars", new ArrayList<>());
-    Universe hitchhikers = new Universe("hitchHiker", new ArrayList<>());
-    Universe marvel = new Universe("marvel", new ArrayList<>());
-    Universe rings = new Universe("rings", new ArrayList<>());
+        Queue<Integer> priorityQueue = new PriorityQueuee<>((a, b) -> b - a);
+        priorityQueue.enqueue(10);
+        priorityQueue.enqueue(5);
+        priorityQueue.enqueue(15);
+        System.out.println("PriorityQueue: " + priorityQueue.dequeue());
+        System.out.println("PriorityQueue: " + priorityQueue.peek());
 
-    Scanner scanner = new Scanner(System.in);
 
-    for (JsonNode entry : data) {
-      String entryAsString = entry.toString();
-      System.out.println(entryAsString);
-      String userInput = scanner.nextLine();
-      switch (userInput) {
-        case "1":
-          starWars.individuals().add(entry);
-          break;
-        case "2":
-          hitchhikers.individuals().add(entry);
-          break;
-        case "3":
-          marvel.individuals().add(entry);
-          break;
-        case "4":
-          rings.individuals().add(entry);
-          break;
-        default:
-          System.out.println("Invalid input");
-      }
+        Queue<String> circularQueue = new CircularQueue<>(3);
+        circularQueue.enqueue("A");
+        circularQueue.enqueue("B");
+        circularQueue.enqueue("C");
+        System.out.println("CircularQueue: " + circularQueue.dequeue());
+        circularQueue.enqueue("D");
+        System.out.println("CircularQueue: " + circularQueue.peek());
     }
-
-    scanner.close();
-    mapper.writeValue(new File("src/main/resources/output/starwars.json"), starWars);
-    mapper.writeValue(new File("src/main/resources/output/hitchhiker.json"), hitchhikers);
-    mapper.writeValue(new File("src/main/resources/output/rings.json"), rings);
-    mapper.writeValue(new File("src/main/resources/output/marvel.json"), marvel);
-  }
 }
-
-record Universe(
-    String name,
-    List<JsonNode> individuals
-) { }

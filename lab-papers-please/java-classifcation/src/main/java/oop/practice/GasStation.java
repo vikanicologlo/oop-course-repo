@@ -1,5 +1,4 @@
 package oop.practice;
-
 public class GasStation implements Refuelable {
     private int gasCarsRefueled = 0;
 
@@ -13,4 +12,3 @@ public class GasStation implements Refuelable {
         return gasCarsRefueled;
     }
 }
-

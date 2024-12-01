@@ -1,21 +1,24 @@
 package oop.practice;
-
 public class CarStation {
-    private Queue<String> queue;
-    private Dineable dineable;
-    private Refuelable refuelable;
+    private Dineable diningService;
+    private Refuelable refuelingService;
+    private Queue<Car> queue;
 
-    public CarStation(Queue<String> queue, Dineable dineable, Refuelable refuelable) {
+    public CarStation(Queue<Car> queue, Dineable diningService, Refuelable refuelingService) {
         this.queue = queue;
-        this.dineable = dineable;
-        this.refuelable = refuelable;
+        this.diningService = diningService;
+        this.refuelingService = refuelingService;
     }
 
-    public void processQueue() {
+    public void serveCars() {
         while (!queue.isEmpty()) {
-            String carId = queue.dequeue();
-            refuelable.refuel(carId);
-            dineable.serveDinner(carId);
+            Car car = queue.dequeue();
+            refuelingService.refuel(car.getCarId());
+            diningService.serveDinner(car.getCarId());
         }
+    }
+
+    public void addCar(Car car) {
+        queue.enqueue(car);
     }
 }

@@ -1,6 +1,4 @@
 package oop.practice;
-
-
 public class ElectricStation implements Refuelable {
     private int electricCarsRefueled = 0;
 

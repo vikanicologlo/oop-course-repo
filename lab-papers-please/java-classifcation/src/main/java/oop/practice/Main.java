@@ -1,29 +1,37 @@
 package oop.practice;
+
 public class Main {
     public static void main(String[] args) {
 
-        Queue<String> carQueue = new SimpleQueue<>();
-        carQueue.enqueue("Car1");
-        carQueue.enqueue("Car2");
-        carQueue.enqueue("Car3");
+        Queue<Car> peopleQueue = new SimpleQueue<>();
+        peopleQueue.enqueue(new Car("Car1"));
+        peopleQueue.enqueue(new Car("Car2"));
+
 
         Dineable peopleDinner = new PeopleDinner();
         Refuelable gasStation = new GasStation();
 
-        CarStation peopleGasStation = new CarStation(carQueue, peopleDinner, gasStation);
-        System.out.println("Processing cars for people and gas station:");
-        peopleGasStation.processQueue();
+        CarStation peopleGasStation = new CarStation(peopleQueue, peopleDinner, gasStation);
 
-        Queue<String> robotQueue = new SimpleQueue<>();
-        robotQueue.enqueue("Car4");
-        robotQueue.enqueue("Car5");
+
+        System.out.println("Processing cars for people and gas station:");
+        peopleGasStation.serveCars();
+
+
+        Queue<Car> robotQueue = new SimpleQueue<>();
+        robotQueue.enqueue(new Car("Car3"));
+        robotQueue.enqueue(new Car("Car4"));
+
 
         Dineable robotDinner = new RobotDinner();
         Refuelable electricStation = new ElectricStation();
 
+
         CarStation robotElectricStation = new CarStation(robotQueue, robotDinner, electricStation);
+
+
         System.out.println("\nProcessing cars for robots and electric station:");
-        robotElectricStation.processQueue();
+        robotElectricStation.serveCars();
 
         System.out.println("\nStatistics:");
         System.out.println("People served: " + ((PeopleDinner) peopleDinner).getPeopleServed());

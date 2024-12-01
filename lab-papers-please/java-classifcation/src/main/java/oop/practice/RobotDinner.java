@@ -8,7 +8,6 @@ public class RobotDinner implements Dineable {
         System.out.println("Serving dinner to robots in car " + carId + ".");
         robotsServed++;
     }
-
     public int getRobotsServed() {
         return robotsServed;
     }

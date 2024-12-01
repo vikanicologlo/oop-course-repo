@@ -1,21 +1,30 @@
 package oop.practice;
 
+import java.util.List;
+
+// Car Station Class
 public class CarStation {
     private Queue<Car> queue;
-    private Dineable dineable;
     private Refuelable refuelable;
 
-    public CarStation(Queue<Car> queue, Dineable dineable, Refuelable refuelable) {
+    public CarStation(Queue<Car> queue, Refuelable refuelable) {
         this.queue = queue;
-        this.dineable = dineable;
         this.refuelable = refuelable;
     }
 
-    public void serveCars() {
-        while (!queue.isEmpty()) {
-            Car car = queue.dequeue();
-            refuelable.refuel(car.getId());
+    public void serveCars(Dineable dineable) {
+        List<Car> sortedQueue = queue.getQueueList();
+        sortedQueue.sort((car1, car2) -> Integer.compare(car1.getId(), car2.getId()));
+
+        System.out.println("Queue before serving:");
+        for (Car car : sortedQueue) {
+            System.out.println("Car ID: " + car.getId());
+        }
+
+        for (Car car : sortedQueue) {
+            System.out.println("Serving car " + car.getId());
             dineable.serveDinner(car.getId());
+            refuelable.refuel(car.getId());
         }
     }
 
@@ -23,14 +32,11 @@ public class CarStation {
         queue.enqueue(car);
     }
 
-    public int getQueueSize() {
-        return queue.size();
-    }
-    public Refuelable getRefuelable() {
-        return refuelable;
+    public List<Car> getQueueList() {
+        return queue.getQueueList();
     }
 
-    public Dineable getDineable() {
-        return dineable;
+    public int getQueueSize() {
+        return queue.size();
     }
 }

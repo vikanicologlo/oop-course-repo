@@ -1,19 +1,14 @@
 package oop.practice;
 
+// Semaphore Class
 public class Semaphore {
-    private CarStation gasCarStation;
-    private CarStation electricCarStation;
+    private CarStation carStation;
 
-    public Semaphore(CarStation gasCarStation, CarStation electricCarStation) {
-        this.gasCarStation = gasCarStation;
-        this.electricCarStation = electricCarStation;
+    public Semaphore(CarStation carStation) {
+        this.carStation = carStation;
     }
 
     public void assignCarToStation(Car car) {
-        if (car.getFuelType() == FuelType.GAS) {
-            gasCarStation.addCar(car);
-        } else if (car.getFuelType() == FuelType.ELECTRIC) {
-            electricCarStation.addCar(car);
-        }
+        carStation.addCar(car);
     }
 }

@@ -1,59 +1,45 @@
 package oop.practice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
+        File folder = new File("/Users/viktorianicologlo/Downloads/oop-course-repo3/lab-car-service/queue");
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
 
-        CarStation gasStation = new CarStation(new SimpleQueue<>(), new PeopleDinner(), new GasStation());
-        CarStation electricStation = new CarStation(new SimpleQueue<>(), new RobotDinner(), new ElectricStation());
+        List<Car> carList = new ArrayList<>();
 
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Car car = objectMapper.readValue(file, Car.class);
+                    carList.add(car);
+                    System.out.println("Loaded car from file: " + file.getName());
+                } catch (Exception e) {
+                    System.out.println("Error reading file " + file.getName() + ": " + e.getMessage());
+                }
+            }
 
-        Semaphore semaphore = new Semaphore(gasStation, electricStation);
+            CarStation carStation = new CarStation(new SimpleQueue(), new GasStation());
+            Semaphore semaphore = new Semaphore(carStation);
 
-
-        CarReader carJsonReader = new CarReader();
-        String filePath = "cars.json";
-        List<Car> cars = carJsonReader.readCarsFromJson(filePath);
-
-
-        if (cars != null) {
-            for (Car car : cars) {
+            carList.sort(Comparator.comparingInt(Car::getId));
+            for (Car car : carList) {
+                System.out.println("Adding car " + car.getId() + " to the queue.");
                 semaphore.assignCarToStation(car);
             }
-        }
 
-        System.out.println("Before serving cars:");
-        System.out.println("Gas Car Station Queue: " + gasStation.getQueueSize());
-        System.out.println("Electric Car Station Queue: " + electricStation.getQueueSize());
+            Dineable peopleDinner = new PeopleDinner(new SimpleQueue());
+            Dineable robotDinner = new RobotDinner(new SimpleQueue());
 
-
-        System.out.println("\nServing cars in gas station:");
-        gasStation.serveCars();
-
-        System.out.println("\nServing cars in electric station:");
-        electricStation.serveCars();
-
-        System.out.println("\nAfter serving cars:");
-        System.out.println("Gas Car Station Queue: " + gasStation.getQueueSize());
-        System.out.println("Electric Car Station Queue: " + electricStation.getQueueSize());
-
-        if (gasStation.getRefuelable() instanceof GasStation) {
-            System.out.println("\nGas cars refueled: " + ((GasStation) gasStation.getRefuelable()).getGasCarsRefueled());
-        }
-
-
-        if (electricStation.getRefuelable() instanceof ElectricStation) {
-            System.out.println("Electric cars refueled: " + ((ElectricStation) electricStation.getRefuelable()).getElectricCarsRefueled());
-        }
-
-
-        if (gasStation.getDineable() instanceof PeopleDinner) {
-            System.out.println("People served: " + ((PeopleDinner) gasStation.getDineable()).getPeopleServed());
-        }
-
-        if (electricStation.getDineable() instanceof RobotDinner) {
-            System.out.println("Robots served: " + ((RobotDinner) electricStation.getDineable()).getRobotsServed());
+            carStation.serveCars(peopleDinner);
+            carStation.serveCars(robotDinner);
         }
     }
 }

@@ -1,19 +1,47 @@
 package oop.practice;
 
-public class Car {
-    private String id;
-    private FuelType fuelType;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Car(String id, FuelType fuelType) {
+public class Car {
+    private int id;
+    private FuelType fuelType;
+    private PassengerType passengers;
+    private boolean isDining;
+    private double consumption;
+
+    @JsonCreator
+    public Car(
+            @JsonProperty("id") int id,
+            @JsonProperty("type") FuelType fuelType,
+            @JsonProperty("passengers") PassengerType passengers,
+            @JsonProperty("isDining") boolean isDining,
+            @JsonProperty("consumption") double consumption
+    ) {
         this.id = id;
         this.fuelType = fuelType;
+        this.passengers = passengers;
+        this.isDining = isDining;
+        this.consumption = consumption;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
     public FuelType getFuelType() {
         return fuelType;
+    }
+
+    public PassengerType getPassengers() {
+        return passengers;
+    }
+
+    public boolean isDining() {
+        return isDining;
+    }
+
+    public double getConsumption() {
+        return consumption;
     }
 }

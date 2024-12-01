@@ -1,25 +1,48 @@
 package oop.practice;
+
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.List;
 
-public class SimpleQueue<T> implements Queue<T> {
-    private LinkedList<T> list = new LinkedList<>();
+// Simple Queue Class
+public class SimpleQueue implements Queue<Car> {
+    private LinkedList<Car> queue;
 
-    @Override
-    public void enqueue(T item) {
-        list.addLast(item);
+    public SimpleQueue() {
+        queue = new LinkedList<>();
     }
 
     @Override
-    public T dequeue() {
-        if (isEmpty()) {
-            throw new NoSuchElementException("Queue is empty");
+    public void enqueue(Car car) {
+        int index = 0;
+        for (Car queuedCar : queue) {
+            if (queuedCar.getId() > car.getId()) {
+                break;
+            }
+            index++;
         }
-        return list.removeFirst();
+        queue.add(index, car);
+    }
+
+    @Override
+    public Car dequeue() {
+        if (queue.isEmpty()) {
+            return null;
+        }
+        return queue.removeFirst();
     }
 
     @Override
     public boolean isEmpty() {
-        return list.isEmpty();
+        return queue.isEmpty();
+    }
+
+    @Override
+    public int size() {
+        return queue.size();
+    }
+
+    @Override
+    public List<Car> getQueueList() {
+        return queue;
     }
 }

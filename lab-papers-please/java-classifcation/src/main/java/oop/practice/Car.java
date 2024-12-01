@@ -1,12 +1,19 @@
 package oop.practice;
-public class Car {
-    private String carId;
 
-    public Car(String carId) {
-        this.carId = carId;
+public class Car {
+    private String id;
+    private FuelType fuelType;
+
+    public Car(String id, FuelType fuelType) {
+        this.id = id;
+        this.fuelType = fuelType;
     }
 
-    public String getCarId() {
-        return carId;
+    public String getId() {
+        return id;
+    }
+
+    public FuelType getFuelType() {
+        return fuelType;
     }
 }

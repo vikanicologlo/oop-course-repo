@@ -1,42 +1,59 @@
 package oop.practice;
 
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
 
-        Queue<Car> peopleQueue = new SimpleQueue<>();
-        peopleQueue.enqueue(new Car("Car1"));
-        peopleQueue.enqueue(new Car("Car2"));
+        CarStation gasStation = new CarStation(new SimpleQueue<>(), new PeopleDinner(), new GasStation());
+        CarStation electricStation = new CarStation(new SimpleQueue<>(), new RobotDinner(), new ElectricStation());
 
 
-        Dineable peopleDinner = new PeopleDinner();
-        Refuelable gasStation = new GasStation();
-
-        CarStation peopleGasStation = new CarStation(peopleQueue, peopleDinner, gasStation);
+        Semaphore semaphore = new Semaphore(gasStation, electricStation);
 
 
-        System.out.println("Processing cars for people and gas station:");
-        peopleGasStation.serveCars();
+        CarReader carJsonReader = new CarReader();
+        String filePath = "cars.json";
+        List<Car> cars = carJsonReader.readCarsFromJson(filePath);
 
 
-        Queue<Car> robotQueue = new SimpleQueue<>();
-        robotQueue.enqueue(new Car("Car3"));
-        robotQueue.enqueue(new Car("Car4"));
+        if (cars != null) {
+            for (Car car : cars) {
+                semaphore.assignCarToStation(car);
+            }
+        }
+
+        System.out.println("Before serving cars:");
+        System.out.println("Gas Car Station Queue: " + gasStation.getQueueSize());
+        System.out.println("Electric Car Station Queue: " + electricStation.getQueueSize());
 
 
-        Dineable robotDinner = new RobotDinner();
-        Refuelable electricStation = new ElectricStation();
+        System.out.println("\nServing cars in gas station:");
+        gasStation.serveCars();
+
+        System.out.println("\nServing cars in electric station:");
+        electricStation.serveCars();
+
+        System.out.println("\nAfter serving cars:");
+        System.out.println("Gas Car Station Queue: " + gasStation.getQueueSize());
+        System.out.println("Electric Car Station Queue: " + electricStation.getQueueSize());
+
+        if (gasStation.getRefuelable() instanceof GasStation) {
+            System.out.println("\nGas cars refueled: " + ((GasStation) gasStation.getRefuelable()).getGasCarsRefueled());
+        }
 
 
-        CarStation robotElectricStation = new CarStation(robotQueue, robotDinner, electricStation);
+        if (electricStation.getRefuelable() instanceof ElectricStation) {
+            System.out.println("Electric cars refueled: " + ((ElectricStation) electricStation.getRefuelable()).getElectricCarsRefueled());
+        }
 
 
-        System.out.println("\nProcessing cars for robots and electric station:");
-        robotElectricStation.serveCars();
+        if (gasStation.getDineable() instanceof PeopleDinner) {
+            System.out.println("People served: " + ((PeopleDinner) gasStation.getDineable()).getPeopleServed());
+        }
 
-        System.out.println("\nStatistics:");
-        System.out.println("People served: " + ((PeopleDinner) peopleDinner).getPeopleServed());
-        System.out.println("Robots served: " + ((RobotDinner) robotDinner).getRobotsServed());
-        System.out.println("Gas cars refueled: " + ((GasStation) gasStation).getGasCarsRefueled());
-        System.out.println("Electric cars refueled: " + ((ElectricStation) electricStation).getElectricCarsRefueled());
+        if (electricStation.getDineable() instanceof RobotDinner) {
+            System.out.println("Robots served: " + ((RobotDinner) electricStation.getDineable()).getRobotsServed());
+        }
     }
 }
